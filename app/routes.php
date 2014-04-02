@@ -11,7 +11,28 @@
 |
 */
 
-Route::get('/', function()
+Route::get('/', array("before" => "auth", function()
 {
 	return View::make('hello');
+}));
+
+Route::get('/login', function() {
+	return View::make('login');
+});
+
+Route::get('/logout', array("before" => "auth", function() {
+	Auth::logout();
+	return Redirect::to('login');
+}));
+
+Route::post('/login', function() {
+	$cred = Input::only('email', 'password');
+
+	$cred["status"] = 1; // Filter the disabled users
+
+	if (Auth::attempt($cred)) {
+		return Redirect::intended('/');
+	}
+
+	return View::make('login')->with('fail', true);
 });

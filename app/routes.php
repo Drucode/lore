@@ -16,11 +16,11 @@ Route::get('/', array("before" => "auth", function()
 	return View::make('hello');
 }));
 
-Route::get('/login', function() {
+Route::get('/login',  array('as' => 'login', function() {
 	return View::make('login');
-});
+}));
 
-Route::get('/logout', array("before" => "auth", function() {
+Route::get('/logout', array('as' => 'logout', "before" => "auth", function() {
 	Auth::logout();
 	return Redirect::to('login');
 }));
